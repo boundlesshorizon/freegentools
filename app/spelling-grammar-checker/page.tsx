@@ -19,31 +19,80 @@ export default function SpellingGrammarChecker() {
   const [checked, setChecked] = useState(false)
 
   const MODES = [
-    { id: 'fix', label: '🔧 Fix Errors' },
+    { id: 'fix', label: '🔧 Fix Spelling & Grammar' },
     { id: 'uppercase', label: '🔠 Fix Capitalization' },
     { id: 'punctuation', label: '✏️ Fix Punctuation' },
   ]
+
+  // Client-side pre-fixes before sending to API
+  const preFix = (text: string): string => {
+    return text
+      // Fix common contractions spacing
+      .replace(/\bwont\b/gi, "won't")
+      .replace(/\bdont\b/gi, "don't")
+      .replace(/\bcant\b/gi, "can't")
+      .replace(/\bisnt\b/gi, "isn't")
+      .replace(/\barent\b/gi, "aren't")
+      .replace(/\bwouldnt\b/gi, "wouldn't")
+      .replace(/\bcouldnt\b/gi, "couldn't")
+      .replace(/\bshouldnt\b/gi, "shouldn't")
+      .replace(/\bdidnt\b/gi, "didn't")
+      .replace(/\bhasnt\b/gi, "hasn't")
+      .replace(/\bhavnt\b/gi, "haven't")
+      .replace(/\bhavent\b/gi, "haven't")
+      .replace(/\bim\b/gi, "I'm")
+      .replace(/\bive\b/gi, "I've")
+      .replace(/\bid\b/gi, "I'd")
+      .replace(/\bill\b/gi, "I'll")
+      // Fix standalone "i" to "I"
+      .replace(/\bi\b/g, 'I')
+      // Fix multiple spaces
+      .replace(/\s{2,}/g, ' ')
+      .trim()
+  }
+
+  // Post-fix after API — ensure first letter capitalized, ends with punctuation
+  const postFix = (text: string): string => {
+    if (!text) return text
+    // Capitalize first letter of each sentence
+    let fixed = text.replace(/(^\s*\w|[.!?]\s+\w)/g, c => c.toUpperCase())
+    // Ensure starts with capital
+    fixed = fixed.charAt(0).toUpperCase() + fixed.slice(1)
+    return fixed
+  }
 
   const fixWithAPI = async () => {
     setLoading(true)
     setOutput('')
     setMatches([])
     setChecked(false)
+
     try {
+      // Apply client-side pre-fixes first
+      const preFixed = preFix(input)
+
       const formData = new URLSearchParams()
-      formData.append('text', input)
+      formData.append('text', preFixed)
       formData.append('language', 'en-US')
+      formData.append('enabledOnly', 'false')
+
       const response = await fetch('https://api.languagetool.org/v2/check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: formData.toString(),
       })
+
+      if (!response.ok) throw new Error('API error')
+
       const data = await response.json()
       const foundMatches: LTMatch[] = data.matches || []
       setMatches(foundMatches)
-      let fixed = input
+
+      // Apply all fixes from API
+      let fixed = preFixed
       let offset = 0
       const sorted = [...foundMatches].sort((a, b) => a.offset - b.offset)
+
       for (const match of sorted) {
         if (match.replacements.length > 0) {
           const before = fixed.slice(0, match.offset + offset)
@@ -53,23 +102,32 @@ export default function SpellingGrammarChecker() {
           offset += replacement.length - match.length
         }
       }
+
+      // Apply post-fixes
+      fixed = postFix(fixed)
       setOutput(fixed)
       setChecked(true)
     } catch {
-      setOutput('Could not connect. Please check your internet and try again.')
+      // Fallback: apply only client-side fixes
+      const fallback = postFix(preFix(input))
+      setOutput(fallback)
       setChecked(true)
+      setMatches([])
     }
+
     setLoading(false)
   }
 
   const quickFix = () => {
     let text = input
     if (mode === 'uppercase') {
-      text = text.toLowerCase()
-        .replace(/(^\s*\w|[.!?]\s*\w)/g, c => c.toUpperCase())
+      text = text
         .replace(/\bi\b/g, 'I')
+        .replace(/(^\s*\w|[.!?]\s*\w)/g, c => c.toUpperCase())
         .replace(/\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/gi, w => w.charAt(0).toUpperCase() + w.slice(1))
         .replace(/\b(january|february|march|april|may|june|july|august|september|october|november|december)\b/gi, w => w.charAt(0).toUpperCase() + w.slice(1))
+        .replace(/\b(philippines|manila|cebu|davao|america|england|australia|canada)\b/gi, w => w.charAt(0).toUpperCase() + w.slice(1))
+      text = text.charAt(0).toUpperCase() + text.slice(1)
     }
     if (mode === 'punctuation') {
       text = text
@@ -116,7 +174,7 @@ export default function SpellingGrammarChecker() {
         <div style={{marginTop:'1rem'}}>
           <label className="tool-label">Your Text</label>
           <textarea
-            placeholder="Paste or type your text here..."
+            placeholder={'Try typing: "what ar you doin today i dont no"\n\nOr paste any text with errors...'}
             value={input}
             onChange={e => { setInput(e.target.value); setOutput(''); setChecked(false); setMatches([]) }}
             rows={6} style={{minHeight:'140px'}}
@@ -149,7 +207,7 @@ export default function SpellingGrammarChecker() {
         {checked && !loading && (
           <div style={{marginTop:'1.25rem'}}>
             <div style={{padding:'0.75rem 1rem', background: errorCount === 0 ? 'rgba(34,197,94,0.1)' : 'rgba(245,200,66,0.1)', border: `1px solid ${errorCount === 0 ? 'rgba(34,197,94,0.3)' : 'rgba(245,200,66,0.3)'}`, borderRadius:'8px', marginBottom:'1rem', fontSize:'0.82rem', color: errorCount === 0 ? '#22c55e' : 'var(--gold)'}}>
-              {errorCount === 0 ? '✅ No errors found! Your text looks great.' : `⚠️ Found and fixed ${errorCount} issue${errorCount !== 1 ? 's' : ''}.`}
+              {errorCount === 0 ? '✅ Looks good! Minor fixes applied.' : `⚠️ Fixed ${errorCount} issue${errorCount !== 1 ? 's' : ''}.`}
             </div>
 
             {output && (

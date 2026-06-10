@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import RelatedTools from '../../components/RelatedTools'
 
-const BANK = {
+const BANK: Record<string, string[]> = {
   story: [
     "The old lighthouse keeper had not spoken to anyone in three years.",
     "She found a letter hidden inside the walls of her grandmother's house.",
@@ -146,9 +146,9 @@ const TYPES = [
   { id: 'random', label: '🎲 Random' },
 ]
 
+// Returns sentences from the SAME category, shuffled
 function generate(type: string, count: number): string[] {
-  const pool = [...BANK[type as keyof typeof BANK]]
-  // Shuffle
+  const pool = [...BANK[type]]
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [pool[i], pool[j]] = [pool[j], pool[i]]
@@ -177,18 +177,15 @@ export default function SentenceGenerator() {
       <div className="tool-header fade-up">
         <div className="breadcrumb"><a href="/">← All Tools</a></div>
         <h1>Sentence <span>Generator</span></h1>
-        <p>Generate creative sentences for stories, captions, motivation, business copy, and more. Pick a style and get instant results.</p>
+        <p>Generate well-written sentences for stories, captions, motivation, business copy, and more. All sentences match your chosen style.</p>
       </div>
 
       <div className="tool-box fade-up-2">
         <label className="tool-label">Sentence Style</label>
         <div className="options-row">
           {TYPES.map(t => (
-            <button
-              key={t.id}
-              className={`opt-btn ${type === t.id ? 'active' : ''}`}
-              onClick={() => setType(t.id)}
-            >
+            <button key={t.id} className={`opt-btn ${type === t.id ? 'active' : ''}`}
+              onClick={() => { setType(t.id); setResults([]) }}>
               {t.label}
             </button>
           ))}
@@ -196,8 +193,7 @@ export default function SentenceGenerator() {
 
         <div style={{marginTop:'1rem'}}>
           <label className="tool-label">How Many: <span style={{color:'var(--gold)'}}>{count}</span></label>
-          <input
-            type="range" min={1} max={10} value={count}
+          <input type="range" min={1} max={10} value={count}
             onChange={e => setCount(Number(e.target.value))}
             style={{width:'100%', accentColor:'var(--gold)', cursor:'pointer', marginTop:'0.5rem'}}
           />
@@ -214,22 +210,15 @@ export default function SentenceGenerator() {
         {results.length > 0 && (
           <div style={{marginTop:'1.25rem'}}>
             <div className="output-label">
-              <label className="tool-label" style={{margin:0}}>{results.length} Sentences</label>
+              <label className="tool-label" style={{margin:0}}>{results.length} {TYPES.find(t=>t.id===type)?.label} Sentences</label>
               <button className="btn btn-ghost btn-sm" onClick={gen}>Regenerate</button>
             </div>
             <div style={{display:'flex', flexDirection:'column', gap:'0.5rem'}}>
               {results.map((s, i) => (
-                <div
-                  key={i}
-                  onClick={() => copyOne(s)}
-                  style={{
-                    background:'var(--bg)', border:'1px solid var(--border)', borderRadius:'8px',
-                    padding:'0.85rem 1rem', display:'flex', justifyContent:'space-between',
-                    alignItems:'flex-start', gap:'0.75rem', cursor:'pointer', transition:'border-color 0.15s',
-                  }}
+                <div key={i} onClick={() => copyOne(s)}
+                  style={{background:'var(--bg)', border:'1px solid var(--border)', borderRadius:'8px', padding:'0.85rem 1rem', display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:'0.75rem', cursor:'pointer', transition:'border-color 0.15s'}}
                   onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--gold-dim)')}
-                  onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
-                >
+                  onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}>
                   <span style={{fontSize:'0.88rem', lineHeight:'1.7', color:'var(--text)', flex:1}}>{s}</span>
                   <button className="copy-btn" style={{whiteSpace:'nowrap', marginTop:'2px'}}>COPY</button>
                 </div>
@@ -241,11 +230,11 @@ export default function SentenceGenerator() {
 
       <div className="seo-content fade-up-3">
         <h2>Free Sentence Generator Tool</h2>
-        <p>Our sentence generator creates unique, well-written sentences across six different styles — perfect for social media captions, creative writing prompts, business copy, motivational posts, and more. Every click produces fresh results from our curated sentence library.</p>
+        <p>Our sentence generator creates unique, well-written sentences across six styles — story, motivational, funny, business, love, and random. Every sentence in a set comes from the same category so they are consistent and usable together for captions, posts, or writing prompts.</p>
         <h2>Creative Writing and Story Prompts</h2>
-        <p>Writers often face creative blocks when starting a new story or scene. Use our Story mode to generate interesting opening sentences or plot hooks. Each generated sentence can spark a new idea, a character concept, or a plot direction. Great for school assignments and creative writing exercises.</p>
+        <p>Writers use Story mode to generate interesting opening sentences or plot hooks for new stories. Each sentence can spark a character idea, a scene, or a full narrative direction. Great for school assignments and creative writing practice.</p>
         <h2>Social Media Captions and Business Copy</h2>
-        <p>Content creators use our Motivational and Love modes to find caption ideas for Instagram and TikTok posts. Marketers use Business mode to draft taglines and presentation openers. The Funny mode is perfect for lighthearted posts and entertainment content that gets shares and reactions.</p>
+        <p>Content creators use Motivational and Love modes for Instagram and TikTok captions. Marketers use Business mode for taglines and presentation openers. The Funny mode is perfect for lighthearted posts that get shares and reactions.</p>
       </div>
 
       <RelatedTools current="/sentence-generator" />

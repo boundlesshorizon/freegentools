@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'FreeGenTools — Free Online Generator & Text Tools',
-  description: '12 free online generator tools. Fancy text, symbols, passwords, QR codes, hashtags, word counter, lorem ipsum, and more. Fast, free, no signup required.',
+  description: '13 free online generator tools. Fancy text, symbols, passwords, QR codes, hashtags, word counter, lorem ipsum, and more. Fast, free, no signup required.',
 }
 
 const tools = [
@@ -105,7 +105,7 @@ export default function Home() {
     <main>
       {/* HERO */}
       <section className="hero fade-up">
-        <div className="hero-badge">✦ 12 Tools · 100% Free · No Signup</div>
+        <div className="hero-badge">✦ 13 Tools · 100% Free · No Signup</div>
         <h1>Free Online <em>Generator</em> Tools for Everyone</h1>
         <p>Fancy text, symbols, passwords, QR codes, hashtags, and more. Fast, free, and works on any device.</p>
       </section>

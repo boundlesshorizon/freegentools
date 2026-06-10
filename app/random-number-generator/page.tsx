@@ -44,9 +44,10 @@ export default function RandomNumberGenerator() {
     { label: 'Dice (1-6)', min: 1, max: 6, count: 1 },
     { label: '2 Dice', min: 1, max: 6, count: 2 },
     { label: '1-100', min: 1, max: 100, count: 1 },
-    { label: 'Lottery 6/49', min: 1, max: 49, count: 6 },
-    { label: 'Lottery 6/55', min: 1, max: 55, count: 6 },
+    { label: '1-1000', min: 1, max: 1000, count: 1 },
+    { label: 'Pin Code', min: 1000, max: 9999, count: 1 },
     { label: 'Raffle 10', min: 1, max: 100, count: 10 },
+    { label: 'Top 3', min: 1, max: 50, count: 3 },
   ]
 
   return (
@@ -167,7 +168,7 @@ export default function RandomNumberGenerator() {
         <h2>Free Random Number Generator Online</h2>
         <p>Our random number generator uses your browser's built-in cryptographic random number functions to produce truly unpredictable results. Whether you need a single number for a quick decision or dozens of numbers for a raffle draw, our tool handles it all.</p>
         <h2>Uses for a Random Number Generator</h2>
-        <p>Teachers use it for classroom raffle draws and random student selection. Game masters use it for dice rolls and dungeon encounters. Businesses use it for lucky draw promotions. Developers use it for testing and prototyping. Lottery enthusiasts use it to generate quick pick numbers for PCSO, 6/49, 6/55, and 6/42 games.</p>
+        <p>Teachers use it for classroom raffle draws and random student selection. Game masters use it for dice rolls and dungeon encounters. Businesses use it for lucky draw promotions. Developers use it for testing and prototyping. Use it to generate PIN codes, raffle draws, classroom picks, game decisions, and more.</p>
         <h2>What Does "No Duplicates" Mean?</h2>
         <p>When the no duplicates option is enabled, each generated number appears only once in the results — like drawing balls from a lottery machine. This is ideal for raffles, lotteries, and any situation where fairness and uniqueness of each result is important.</p>
       </div>
