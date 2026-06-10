@@ -14,6 +14,7 @@ const ALL_TOOLS = [
   { href: '/hashtag-generator', icon: '#', name: 'Hashtag Generator' },
   { href: '/sentence-generator', icon: '✍', name: 'Sentence Generator' },
   { href: '/spelling-grammar-checker', icon: '✓', name: 'Spelling & Grammar Fixer' },
+  { href: '/lotto-number-generator', icon: '🎰', name: 'Lotto Number Generator' },
 ]
 
 export default function RelatedTools({ current }: { current: string }) {
