@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'FreeGenTools — Free Online Generator & Text Tools',
-  description: '10 free online generator tools. Fancy text, symbols, passwords, QR codes, hashtags, word counter, lorem ipsum, and more. Fast, free, no signup required.',
+  description: '11 free online generator tools. Fancy text, symbols, passwords, QR codes, hashtags, word counter, lorem ipsum, and more. Fast, free, no signup required.',
 }
 
 const tools = [
@@ -78,17 +78,17 @@ const tools = [
     tag: '',
   },
   {
-    href: '/nickname-generator',
-    icon: '★',
-    name: 'Nickname Generator',
-    desc: 'Generate fun, creative nicknames for friends, social media, gaming, and group chats.',
-    tag: 'New',
-  },
-  {
     href: '/sentence-generator',
     icon: '✍',
     name: 'Sentence Generator',
     desc: 'Generate creative sentences for stories, captions, motivation, and business copy.',
+    tag: 'New',
+  },
+  {
+    href: '/spelling-grammar-checker',
+    icon: '✓',
+    name: 'Spelling & Grammar Fixer',
+    desc: 'Fix spelling mistakes and grammar errors in your text instantly. Perfect for essays and posts.',
     tag: 'New',
   },
 ]
@@ -98,7 +98,7 @@ export default function Home() {
     <main>
       {/* HERO */}
       <section className="hero fade-up">
-        <div className="hero-badge">✦ 10 Tools · 100% Free · No Signup</div>
+        <div className="hero-badge">✦ 11 Tools · 100% Free · No Signup</div>
         <h1>Free Online <em>Generator</em> Tools for Everyone</h1>
         <p>Fancy text, symbols, passwords, QR codes, hashtags, and more. Fast, free, and works on any device.</p>
       </section>

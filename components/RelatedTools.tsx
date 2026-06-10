@@ -12,8 +12,8 @@ const ALL_TOOLS = [
   { href: '/random-number-generator', icon: '⚄', name: 'Random Number Generator' },
   { href: '/username-generator', icon: '@', name: 'Username Generator' },
   { href: '/hashtag-generator', icon: '#', name: 'Hashtag Generator' },
-  { href: '/nickname-generator', icon: '★', name: 'Nickname Generator' },
   { href: '/sentence-generator', icon: '✍', name: 'Sentence Generator' },
+  { href: '/spelling-grammar-checker', icon: '✓', name: 'Spelling & Grammar Fixer' },
 ]
 
 export default function RelatedTools({ current }: { current: string }) {
