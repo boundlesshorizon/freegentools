@@ -13,8 +13,10 @@ const ALL_TOOLS = [
   { href: '/username-generator', icon: '@', name: 'Username Generator' },
   { href: '/hashtag-generator', icon: '#', name: 'Hashtag Generator' },
   { href: '/sentence-generator', icon: '✍', name: 'Sentence Generator' },
-  { href: '/spelling-grammar-checker', icon: '✓', name: 'Spelling & Grammar Fixer' },
   { href: '/lotto-number-generator', icon: '🎰', name: 'Lotto Number Generator' },
+  { href: '/bmi-calculator', icon: '⚖️', name: 'BMI Calculator' },
+  { href: '/email-generator', icon: '✉️', name: 'Email Generator' },
+  { href: '/essay-generator', icon: '📝', name: 'Essay Generator' },
 ]
 
 export default function RelatedTools({ current }: { current: string }) {

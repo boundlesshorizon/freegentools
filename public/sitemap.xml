@@ -56,22 +56,27 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://freegentools.vercel.app/sentence-generator</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
     <loc>https://freegentools.vercel.app/privacy-policy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://freegentools.vercel.app/spelling-grammar-checker</loc>
+    <loc>https://freegentools.vercel.app/lotto-number-generator</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://freegentools.vercel.app/lotto-number-generator</loc>
+    <loc>https://freegentools.vercel.app/bmi-calculator</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://freegentools.vercel.app/email-generator</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://freegentools.vercel.app/essay-generator</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>

@@ -32,7 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <nav>
           <a href="/" className="nav-logo">Free<span>Gen</span>Tools</a>
-          <span className="nav-tagline">13 Free Tools · No Signup</span>
+          <span className="nav-tagline">14 Free Tools · No Signup</span>
         </nav>
         {children}
         <footer>

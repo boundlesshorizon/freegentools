@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'FreeGenTools — Free Online Generator & Text Tools',
-  description: '13 free online generator tools. Fancy text, symbols, passwords, QR codes, hashtags, word counter, lorem ipsum, and more. Fast, free, no signup required.',
+  description: '14 free online generator tools. Fancy text, symbols, passwords, QR codes, hashtags, word counter, lorem ipsum, and more. Fast, free, no signup required.',
 }
 
 const tools = [
@@ -78,24 +78,31 @@ const tools = [
     tag: '',
   },
   {
-    href: '/sentence-generator',
-    icon: '✍',
-    name: 'Sentence Generator',
-    desc: 'Generate creative sentences for stories, captions, motivation, and business copy.',
-    tag: 'New',
-  },
-  {
-    href: '/spelling-grammar-checker',
-    icon: '✓',
-    name: 'Spelling & Grammar Fixer',
-    desc: 'Fix spelling mistakes and grammar errors in your text instantly. Perfect for essays and posts.',
-    tag: 'New',
-  },
-  {
     href: '/lotto-number-generator',
     icon: '🎰',
     name: 'Lotto Number Generator',
     desc: 'Generate lucky lotto numbers for Philippines PCSO, US Powerball, Canada, UK, and Australia.',
+    tag: '',
+  },
+  {
+    href: '/bmi-calculator',
+    icon: '⚖️',
+    name: 'BMI Calculator',
+    desc: 'Calculate your Body Mass Index instantly. Get your BMI score, ideal weight range, and health tips.',
+    tag: 'New',
+  },
+  {
+    href: '/email-generator',
+    icon: '✉️',
+    name: 'Email Generator',
+    desc: 'Generate professional emails instantly. Formal, apology, job application, resignation, and more.',
+    tag: 'New',
+  },
+  {
+    href: '/essay-generator',
+    icon: '📝',
+    name: 'Essay Generator',
+    desc: 'Generate complete structured essays instantly. 6 essay types, custom topics, multiple lengths.',
     tag: 'New',
   },
 ]
@@ -105,7 +112,7 @@ export default function Home() {
     <main>
       {/* HERO */}
       <section className="hero fade-up">
-        <div className="hero-badge">✦ 13 Tools · 100% Free · No Signup</div>
+        <div className="hero-badge">✦ 14 Tools · 100% Free · No Signup</div>
         <h1>Free Online <em>Generator</em> Tools for Everyone</h1>
         <p>Fancy text, symbols, passwords, QR codes, hashtags, and more. Fast, free, and works on any device.</p>
       </section>
