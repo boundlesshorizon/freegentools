@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Symbols+2&family=Noto+Sans+Math&display=swap');
 
 :root {
   --gold: #F5C842;
@@ -418,7 +419,12 @@ footer a { color: var(--gold); text-decoration: none; }
   transition: border-color 0.15s;
 }
 .fancy-item:hover { border-color: var(--gold-dim); }
-.fancy-item .style-text { font-size: 0.9rem; flex: 1; word-break: break-all; }
+.fancy-item .style-text {
+  font-size: 0.9rem;
+  flex: 1;
+  word-break: break-all;
+  font-family: 'DM Mono', 'Noto Sans Math', 'Noto Sans Symbols 2', 'Segoe UI Symbol', 'Noto Sans', monospace, sans-serif;
+}
 .fancy-item .copy-btn {
   font-size: 0.65rem;
   color: var(--text-dim);
