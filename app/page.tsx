@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'FreeGenTools — Free Online Generator & Text Tools',
-  description: '14 free online generator tools. Fancy text, symbols, passwords, QR codes, hashtags, word counter, lorem ipsum, and more. Fast, free, no signup required.',
+  description: '12 free online generator tools. Fancy text, symbols, passwords, QR codes, hashtags, word counter, lorem ipsum, and more. Fast, free, no signup required.',
 }
 
 const tools = [
