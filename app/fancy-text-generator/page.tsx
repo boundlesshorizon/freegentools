@@ -3,6 +3,66 @@ import { useState, useCallback } from 'react'
 import RelatedTools from '../../components/RelatedTools'
 
 const transformText = (text: string) => {
+  const A = 'abcdefghijklmnopqrstuvwxyz'
+  const U = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  const N = '0123456789'
+
+  // Generic mapper: builds a function from full replacement alphabets
+  const mapAlphabet = (upper: string, lower: string, digits?: string) => (t: string) =>
+    t.split('').map(c => {
+      const ui = U.indexOf(c)
+      if (ui >= 0) return upper[ui] ?? c
+      const li = A.indexOf(c)
+      if (li >= 0) return lower[li] ?? c
+      if (digits) {
+        const ni = N.indexOf(c)
+        if (ni >= 0) return digits[ni] ?? c
+      }
+      return c
+    }).join('')
+
+  // Math Alphanumeric blocks
+  const fromCodepoint = (upStart: number, loStart: number, numStart?: number) => {
+    const upper = Array.from({length:26}, (_,i) => String.fromCodePoint(upStart+i)).join('')
+    const lower = Array.from({length:26}, (_,i) => String.fromCodePoint(loStart+i)).join('')
+    const digits = numStart ? Array.from({length:10}, (_,i) => String.fromCodePoint(numStart+i)).join('') : undefined
+    return { upper, lower, digits }
+  }
+
+  const bold = (() => { const {upper,lower,digits} = fromCodepoint(0x1D400,0x1D41A,0x1D7CE); return mapAlphabet(upper,lower,digits) })()
+  const italic = (() => { const {upper,lower} = fromCodepoint(0x1D434,0x1D44E); return mapAlphabet(upper,lower) })()
+  const boldItalic = (() => { const {upper,lower} = fromCodepoint(0x1D468,0x1D482); return mapAlphabet(upper,lower) })()
+  const script = (() => {
+    const {upper,lower} = fromCodepoint(0x1D49C,0x1D4B6)
+    const u = upper.split(''); const l = lower.split('')
+    const upEx: Record<string,string> = {B:'\u212C',E:'\u2130',F:'\u2131',H:'\u210B',I:'\u2110',L:'\u2112',M:'\u2133',R:'\u211B'}
+    const loEx: Record<string,string> = {e:'\u212F',g:'\u210A',o:'\u2134'}
+    U.split('').forEach((ch,i) => { if (upEx[ch]) u[i] = upEx[ch] })
+    A.split('').forEach((ch,i) => { if (loEx[ch]) l[i] = loEx[ch] })
+    return mapAlphabet(u.join(''), l.join(''))
+  })()
+  const boldScript = (() => { const {upper,lower} = fromCodepoint(0x1D4D0,0x1D4EA); return mapAlphabet(upper,lower) })()
+  const fraktur = (() => {
+    const {upper,lower} = fromCodepoint(0x1D504,0x1D51E)
+    const u = upper.split('')
+    const upEx: Record<string,string> = {C:'\u212D',H:'\u210C',I:'\u2111',R:'\u211C',Z:'\u2128'}
+    U.split('').forEach((ch,i) => { if (upEx[ch]) u[i] = upEx[ch] })
+    return mapAlphabet(u.join(''), lower)
+  })()
+  const boldFraktur = (() => { const {upper,lower} = fromCodepoint(0x1D56C,0x1D586); return mapAlphabet(upper,lower) })()
+  const doubleStruck = (() => {
+    const {upper,lower,digits} = fromCodepoint(0x1D538,0x1D552,0x1D7D8)
+    const u = upper.split('')
+    const upEx: Record<string,string> = {C:'\u2102',H:'\u210D',N:'\u2115',P:'\u2119',Q:'\u211A',R:'\u211D',Z:'\u2124'}
+    U.split('').forEach((ch,i) => { if (upEx[ch]) u[i] = upEx[ch] })
+    return mapAlphabet(u.join(''), lower, digits)
+  })()
+  const sans = (() => { const {upper,lower,digits} = fromCodepoint(0x1D5A0,0x1D5BA,0x1D7E2); return mapAlphabet(upper,lower,digits) })()
+  const sansBold = (() => { const {upper,lower,digits} = fromCodepoint(0x1D5D4,0x1D5EE,0x1D7EC); return mapAlphabet(upper,lower,digits) })()
+  const sansItalic = (() => { const {upper,lower} = fromCodepoint(0x1D608,0x1D622); return mapAlphabet(upper,lower) })()
+  const sansBoldItalic = (() => { const {upper,lower} = fromCodepoint(0x1D63C,0x1D656); return mapAlphabet(upper,lower) })()
+  const monospace = (() => { const {upper,lower,digits} = fromCodepoint(0x1D670,0x1D68A,0x1D7F6); return mapAlphabet(upper,lower,digits) })()
+
   // Upside down map
   const flipMap: Record<string,string> = {
     a:'ɐ',b:'q',c:'ɔ',d:'p',e:'ǝ',f:'ɟ',g:'ƃ',h:'ɥ',i:'ᴉ',j:'ɾ',k:'ʞ',l:'l',
@@ -32,33 +92,21 @@ const transformText = (text: string) => {
   }
   const tiny = (t: string) => t.split('').map(c => tinyMap[c] ?? c).join('')
 
-  // Bubble (circled letters) - these are standard Unicode, render everywhere
+  // Bubble (circled letters)
   const bubbleL = 'ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ'
   const bubbleU = 'ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ'
   const bubbleN = '⓪①②③④⑤⑥⑦⑧⑨'
-  const bubble = (t: string) => t.split('').map(c => {
-    const li = 'abcdefghijklmnopqrstuvwxyz'.indexOf(c)
-    if (li >= 0) return bubbleL[li]
-    const ui = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.indexOf(c)
-    if (ui >= 0) return bubbleU[ui]
-    const ni = '0123456789'.indexOf(c)
-    if (ni >= 0) return bubbleN[ni]
-    return c
-  }).join('')
+  const bubble = mapAlphabet(bubbleU, bubbleL, bubbleN)
 
-  // Vaporwave fullwidth - renders everywhere
+  // Square / enclosed alphanumeric letters
+  const squareU = '🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉'
+  const square = mapAlphabet(squareU, squareU)
+
+  // Vaporwave fullwidth
   const vaporL = 'ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ'
   const vaporU = 'ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ'
   const vaporN = '０１２３４５６７８９'
-  const vapor = (t: string) => t.split('').map(c => {
-    const li = 'abcdefghijklmnopqrstuvwxyz'.indexOf(c)
-    if (li >= 0) return vaporL[li]
-    const ui = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.indexOf(c)
-    if (ui >= 0) return vaporU[ui]
-    const ni = '0123456789'.indexOf(c)
-    if (ni >= 0) return vaporN[ni]
-    return c
-  }).join('')
+  const vapor = mapAlphabet(vaporU, vaporL, vaporN)
 
   // Combining diacritics
   const strike = (t: string) => t.split('').join('\u0336')
@@ -75,11 +123,25 @@ const transformText = (text: string) => {
   const inverse = (t: string) => t.split('').map(c => c===c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join('')
 
   const styles = [
-    // Safe Unicode styles
-    { name: 'ⓑⓤⓑⓑⓛⓔ text', fn: bubble },
-    { name: 'Ｖａｐｏｒｗａｖｅ', fn: vapor },
+    // ===== PREMIUM FONT STYLES (most-used "cool fonts" — Canva/LingoJam style) =====
+    { name: 'Bold', fn: bold },
+    { name: 'Italic', fn: italic },
+    { name: 'Bold Italic', fn: boldItalic },
+    { name: 'Cursive Script', fn: script },
+    { name: 'Bold Cursive', fn: boldScript },
+    { name: 'Gothic / Fraktur', fn: fraktur },
+    { name: 'Bold Gothic', fn: boldFraktur },
+    { name: 'Double-Struck', fn: doubleStruck },
+    { name: 'Sans Serif', fn: sans },
+    { name: 'Sans Serif Bold', fn: sansBold },
+    { name: 'Sans Serif Italic', fn: sansItalic },
+    { name: 'Sans Serif Bold Italic', fn: sansBoldItalic },
+    { name: 'Monospace', fn: monospace },
+    { name: 'Circle Letters', fn: bubble },
+    { name: 'Square Letters', fn: square },
+    { name: 'Wide Fullwidth', fn: vapor },
 
-    // Diacritic styles (render everywhere)
+    // Diacritic styles
     { name: 'S̶t̶r̶i̶k̶e̶t̶h̶r̶o̶u̶g̶h̶', fn: strike },
     { name: 'U̲n̲d̲e̲r̲l̲i̲n̲e̲', fn: underline },
     { name: 'D̳o̳u̳b̳l̳e̳ U̳n̳d̳e̳r̳l̳i̳n̳e̳', fn: doubleUnder },
@@ -180,9 +242,17 @@ const transformText = (text: string) => {
     { name: '☮ Peace ☮', fn: (t: string) => `☮ ${t} ☮` },
     { name: '⚛ Atom ⚛', fn: (t: string) => `⚛ ${t} ⚛` },
 
-    // Combo styles (border + spacing)
-    { name: '✨ W I D E Sparkle ✨', fn: (t: string) => `✨ ${t.split('').join(' ')} ✨` },
+    // Combo styles (premium font + border / spacing)
+    { name: '✨ Bold Sparkle ✨', fn: (t: string) => `✨ ${bold(t)} ✨` },
+    { name: '👑 Bold Crown 👑', fn: (t: string) => `👑 ${bold(t)} 👑` },
+    { name: '💎 Script Diamond 💎', fn: (t: string) => `💎 ${script(t)} 💎` },
+    { name: '🌟 Italic Star 🌟', fn: (t: string) => `🌟 ${italic(t)} 🌟` },
+    { name: '꧁ Gothic Ornament ꧂', fn: (t: string) => `꧁ ${fraktur(t)} ꧂` },
+    { name: '【 Bold Box 】', fn: (t: string) => `【 ${bold(t)} 】` },
+    { name: '《 Double-Struck Angle 》', fn: (t: string) => `《 ${doubleStruck(t)} 》` },
+    { name: '♛ Bold Script Queen ♛', fn: (t: string) => `♛ ${boldScript(t)} ♛` },
     { name: '🔥 W I D E Fire 🔥', fn: (t: string) => `🔥 ${t.split('').join(' ')} 🔥` },
+    { name: '✨ W I D E Sparkle ✨', fn: (t: string) => `✨ ${t.split('').join(' ')} ✨` },
     { name: '👑 Bubble Crown 👑', fn: (t: string) => `👑 ${bubble(t)} 👑` },
     { name: '🌟 Vapor Star 🌟', fn: (t: string) => `🌟 ${vapor(t)} 🌟` },
     { name: '💎 Bubble Diamond 💎', fn: (t: string) => `💎 ${bubble(t)} 💎` },
@@ -214,8 +284,8 @@ export default function FancyTextGenerator() {
     <main className="tool-page">
       <div className="tool-header fade-up">
         <div className="breadcrumb"><a href="/">← All Tools</a></div>
-        <h1>Fancy <span>Text</span> Generator</h1>
-        <p>Type your text and get 100+ beautiful styles instantly. Works on Facebook, TikTok, Instagram, Discord, and more. Click any style to copy.</p>
+        <h1>Cool Fonts &amp; <span>Fancy Text</span> Generator</h1>
+        <p>Type your text and get 100+ cool fonts, stylish letters, and symbols for your Instagram bio, TikTok name, Discord, and Facebook — copy and paste, no apps needed.</p>
       </div>
 
       <div className="tool-box fade-up-2">
@@ -229,7 +299,7 @@ export default function FancyTextGenerator() {
         {input.trim() && (
           <div style={{marginTop:'1.25rem'}}>
             <div className="output-label">
-              <span className="tool-label" style={{margin:0}}>{results.length} Styles Generated</span>
+              <span className="tool-label" style={{margin:0}}>{results.length} Fonts &amp; Styles Generated</span>
               <span style={{fontSize:'0.72rem', color:'var(--text-dim)'}}>Click any to copy</span>
             </div>
             <div className="fancy-grid">
@@ -244,18 +314,25 @@ export default function FancyTextGenerator() {
         )}
         {!input.trim() && (
           <div className="output-box" style={{color:'var(--text-dim)', textAlign:'center', display:'flex', alignItems:'center', justifyContent:'center'}}>
-            Your 100+ fancy text styles will appear here ✦
+            Your 100+ cool fonts and fancy text styles will appear here ✦
           </div>
         )}
       </div>
 
       <div className="seo-content fade-up-3">
-        <h2>What is a Fancy Text Generator?</h2>
-        <p>A fancy text generator transforms your normal text into stylized Unicode characters, emoji borders, and special decorations that stand out on any platform. These styles work on Facebook, Instagram, TikTok, Twitter, Discord, WhatsApp, and more — no special fonts or apps needed.</p>
-        <h2>How to Use the Fancy Text Generator</h2>
-        <p>Simply type or paste your text in the input box above. All 100+ styles are generated instantly. Click any style to copy it to your clipboard, then paste it anywhere. Works on mobile and desktop, no signup required.</p>
-        <h2>Who Uses Fancy Text Generators?</h2>
-        <p>Students use it for creative bios, gamers use it for stylish usernames, content creators use it for eye-catching captions and posts, and small business owners use it to make their social media profiles stand out. Popular styles include upside-down text, bubble letters, vaporwave, strikethrough, emoji borders, and symbol decorations.</p>
+        <h2>Cool Fonts for Instagram Bio, TikTok &amp; Discord — Copy and Paste</h2>
+        <p>This fancy text generator turns plain text into 100+ cool fonts and stylish letters — bold, italic, cursive script, gothic/fraktur, double-struck, monospace, bubble letters, and more — using special Unicode characters. Copy any style and paste it directly into your Instagram bio, TikTok username, Facebook post, Discord nickname, Twitter/X profile, or WhatsApp status. No font installation, no apps, and no signup required.</p>
+        <h2>How to Make Your Bio Stand Out with Aesthetic Fonts</h2>
+        <p>Type your name or text in the box above. Instantly get bold fonts, italic fonts, cursive fonts, gothic letters, circle/bubble letters, and dozens of emoji-decorated and symbol-bordered styles — the same aesthetic look people get from Canva font generators, but ready to paste anywhere text is accepted. Click any style to copy it to your clipboard.</p>
+        <h2>Frequently Asked Questions</h2>
+        <h3>Will these fancy fonts work on Instagram and TikTok?</h3>
+        <p>Yes. These are real Unicode characters, not images or custom fonts, so they display correctly in Instagram bios, TikTok usernames and captions, Facebook posts, Discord nicknames, Twitter/X, and WhatsApp.</p>
+        <h3>What's the difference between this and a Canva font generator?</h3>
+        <p>Canva fonts are typically image-based or require their editor. This tool generates copy-paste text fonts that work anywhere plain text is accepted — bios, usernames, chat apps, and comments — with no design software needed.</p>
+        <h3>Which font style is most popular for bios?</h3>
+        <p>Bold, italic, and cursive script styles are the most commonly used for Instagram and TikTok bios, while bubble letters and emoji-bordered styles are popular for usernames and gamer tags.</p>
+        <h3>Is this fancy text generator free?</h3>
+        <p>Yes, completely free with no account, signup, or download required. Generate and copy unlimited styles.</p>
       </div>
 
       <RelatedTools current="/fancy-text-generator" />
