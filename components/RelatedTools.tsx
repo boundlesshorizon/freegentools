@@ -15,6 +15,8 @@ const ALL_TOOLS = [
   { href: '/sentence-generator', icon: '✍', name: 'Sentence Generator' },
   { href: '/lotto-number-generator', icon: '🎰', name: 'Lotto Number Generator' },
   { href: '/bmi-calculator', icon: '⚖️', name: 'BMI Calculator' },
+  { href: '/email-generator', icon: '✉️', name: 'Email Generator' },
+  { href: '/essay-generator', icon: '📝', name: 'Essay Generator' },
 ]
 
 export default function RelatedTools({ current }: { current: string }) {

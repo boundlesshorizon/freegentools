@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'FreeGenTools — Free Online Generator & Text Tools',
-  description: '12 free online generator tools. Fancy text, symbols, passwords, QR codes, hashtags, word counter, lorem ipsum, and more. Fast, free, no signup required.',
+  description: '14 free online generator tools. Fancy text, symbols, passwords, QR codes, hashtags, word counter, lorem ipsum, and more. Fast, free, no signup required.',
 }
 
 const tools = [
@@ -91,6 +91,20 @@ const tools = [
     desc: 'Calculate your Body Mass Index instantly. Get your BMI score, ideal weight range, and health tips.',
     tag: 'New',
   },
+  {
+    href: '/email-generator',
+    icon: '✉️',
+    name: 'Email Generator',
+    desc: 'Generate professional emails instantly. Formal, apology, job application, resignation, and more.',
+    tag: 'New',
+  },
+  {
+    href: '/essay-generator',
+    icon: '📝',
+    name: 'Essay Generator',
+    desc: 'Generate complete structured essays instantly. 6 essay types, custom topics, multiple lengths.',
+    tag: 'New',
+  },
 ]
 
 export default function Home() {
@@ -98,7 +112,7 @@ export default function Home() {
     <main>
       {/* HERO */}
       <section className="hero fade-up">
-        <div className="hero-badge">✦ 12 Tools · 100% Free · No Signup</div>
+        <div className="hero-badge">✦ 14 Tools · 100% Free · No Signup</div>
         <h1>Free Online <em>Generator</em> Tools for Everyone</h1>
         <p>Fancy text, symbols, passwords, QR codes, hashtags, and more. Fast, free, and works on any device.</p>
       </section>
